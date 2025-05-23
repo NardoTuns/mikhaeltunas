@@ -62,7 +62,12 @@
       event.preventDefault();
       const nama = document.getElementById("nama").value;
       const password = document.getElementById("password").value;
-      alert(`Halo ${nama}, Anda mencoba login dengan password: ${password}`);
+
+      if (password === "SMPBSN") {
+        alert(`Selamat datang, ${nama}!`);
+      } else {
+        alert("Password salah. Silakan coba lagi.");
+      }
     }
   </script>
 </body>
