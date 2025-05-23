@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis IPA SMP</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Kuis IPA SMP</h1>
+        
+        <div id="quiz">
+            <!-- Pertanyaan akan dimuat di sini oleh JavaScript -->
+        </div>
+        
+        <button id="submit">Submit Jawaban</button>
+        
+        <div id="result">
+            <h2>Hasil Kuis</h2>
+            <p id="score"></p>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "1. Apa satuan SI untuk pengukuran gaya?",
+                options: ["Newton", "Joule", "Watt", "Pascal"],
+                answer: "Newton"
+            },
+            {
+                question: "2. Proses fotosintesis pada tumbuhan menghasilkan...",
+                options: ["Oksigen dan Glukosa", "Karbon dioksida dan Air", "Nitrogen dan Hidrogen", "Metana dan Oksigen"],
+                answer: "Oksigen dan Glukosa"
+            },
+            {
+                question: "3. Planet terdekat dari matahari dalam tata surya kita adalah...",
+                options: ["Venus", "Mars", "Merkurius", "Bumi"],
+                answer: "Merkurius"
+            },
+            {
+                question: "4. Zat yang memiliki pH kurang dari 7 disebut...",
+                options: ["Basa", "Asam", "Netral", "Garam"],
+                answer: "Asam"
+            },
+            {
+                question: "5. Alat optik yang digunakan untuk mengamati benda-benda kecil adalah...",
+                options: ["Teleskop", "Mikroskop", "Periskop", "Kamera"],
+                answer: "Mikroskop"
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz');
+        const resultContainer = document.getElementById('result');
+        const submitButton = document.getElementById('submit');
+        const scoreDisplay = document.getElementById('score');
+        const feedbackDisplay = document.getElementById('feedback');
+
+        // Membuat tampilan kuis
+        function buildQuiz() {
+            const output = [];
+
+            quizData.forEach((currentQuestion, questionNumber) => {
+                const options = [];
+
+                for (let i = 0; i < currentQuestion.options.length; i++) {
+                    options.push(
+                        `<label>
+                            <input type="radio" name="question${questionNumber}" value="${currentQuestion.options[i]}">
+                            ${currentQuestion.options[i]}
+                        </label><br>`
+                    );
+                }
+
+                output.push(
+                    `<div class="question">${currentQuestion.question}</div>
+                    <div class="options">${options.join('')}</div>`
+                );
+            });
+
+            quizContainer.innerHTML = output.join('');
+        }
+
+        // Menghitung hasil kuis
+        function showResults() {
+            const answerContainers = quizContainer.querySelectorAll('.options');
+            let numCorrect = 0;
+
+            quizData.forEach((currentQuestion, questionNumber) => {
+                const answerContainer = answerContainers[questionNumber];
+                const selector = `input[name=question${questionNumber}]:checked`;
+                const userAnswer = (answerContainer.querySelector(selector) || {};
+
+                if (userAnswer.value === currentQuestion.answer) {
+                    numCorrect++;
+                    answerContainers[questionNumber].classList.add('correct');
+                } else {
+                    answerContainers[questionNumber].classList.add('incorrect');
+                }
+            });
+
+            const score = Math.round((numCorrect / quizData.length) * 100);
+            scoreDisplay.innerHTML = `Skor Anda: ${score}% (${numCorrect} benar dari ${quizData.length} soal)`;
+            
+            if (score >= 80) {
+                feedbackDisplay.innerHTML = "Luar biasa! Pemahaman IPA Anda sangat baik.";
+            } else if (score >= 60) {
+                feedbackDisplay.innerHTML = "Bagus! Tetap semangat belajar IPA.";
+            } else {
+                feedbackDisplay.innerHTML = "Jangan menyerah! Pelajari lagi materi IPA.";
+            }
+            
+            resultContainer.style.display = 'block';
+            submitButton.style.display = 'none';
+            
+            // Scroll ke hasil
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Event listener
+        submitButton.addEventListener('click', showResults);
+
+        // Membangun kuis saat halaman dimuat
+        buildQuiz();
+    </script>
+</body>
+</html>
